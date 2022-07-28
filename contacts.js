@@ -15,21 +15,24 @@ const listContacts = async ()=> {
 const getContactById = async (contactId)=> {
     const contacts = await listContacts();
     const contact = contacts.find(item => item.id == contactId);
-    return contact;
+    return contact || null;
 }
 
 const removeContact = async (contactId)=> {
     const contacts = await listContacts();
     const index = contacts.findIndex(item => item.id === contactId);
-    const removedContact = contacts.splice(index, 1);
-    await updateContacts(contacts);
-    return removedContact;
+    if(index !== -1) {
+        const removedContact = contacts.splice(index, 1);
+        await updateContacts(contacts);
+        return removedContact;
+    }
+    return null;
 }
 
 const addContact = async (name, email, phone)=> {
     const contacts = await listContacts();
     const newContact = {
-        id: JSON.stringify(contacts.length + 1),
+        id: (contacts.length + 1).toString(),
         name,
         email,
         phone
